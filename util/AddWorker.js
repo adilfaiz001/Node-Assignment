@@ -23,7 +23,7 @@ exports.AddNewUser = function (params) {
             if (!row) {
                 // insert one row into the langs table
                 console.log('INSERTING ROW')
-                db.run(`INSERT INTO patients VALUES (?, ?, ?, ?, ?, ?, ?)`, [decodeURI(params.name), params.email, params.phone, decodeURI(params.address), hash, getDateTime(), uid], function(err) {
+                db.run(`INSERT INTO patients VALUES (?, ?, ?, ?, ?, ?, ?, ?)`, [decodeURI(params.name), params.email, params.phone, decodeURI(params.address), hash, getDateTime(), uid, salt], function(err) {
                     if (err) {
                         console.log(err.message);
                         resolve({

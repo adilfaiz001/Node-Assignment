@@ -1,5 +1,5 @@
-<script src="js/addnew.js"></script>
-<link rel="stylesheet" type="text/css" href="./css/AddNew.css" />
+<script src="js/update.js"></script>
+<link rel="stylesheet" type="text/css" href="./css/Update.css" />
 
 <!--=================== HEADER AND SIDEBAR NAV MENU ===================-->
 <header>
@@ -11,15 +11,15 @@
     <div class="login-container">
         <div class="email-msg" id="email-msg-box"></div>
         <div>
-            <p class="form-title">ADD NEW PATIENT</p>
+            <p class="form-title">UPDATE PATIENT</p>
             <input id="name" type="text" class="textbox" placeholder="Name" required autocomplete="name"/>
             <input id="email" type="text" class="textbox" placeholder="Email" require autocomplete="email" spellcheck="false">
             <input id="phone" type="text" class="textbox" placeholder="Phone" required autocomplete="username"/>
             <input id="address" type="text" class="textbox" placeholder="Address" required autocomplete="name"/>
             <input id="password" type="password" class="textbox password" placeholder="Password" required autocomplete="new-password"/>
-            <input id="conf-password" type="password" class="textbox password" placeholder="Confirm Password" required  autocomplete="new-password"/>
 
-            <button id="signup-btn" class="button">Add</button>
+
+            <button id="signup-btn" class="button">UPDATE</button>
             <div class="loading loading-none" id="loading-bar">
                 <div class="loading-bar"></div>
                 <div class="loading-bar"></div>
@@ -36,17 +36,15 @@
     var phone = document.getElementById("phone");
     var address = document.getElementById("address");
     var password = document.getElementById("password");
-    var confPassword = document.getElementById("conf-password");
     
     document.getElementById("signup-btn").onclick = function () {
-        validityState = validateInputs(email.value,phone.value, _name.value, password.value, confPassword.value, address.value);
+        validityState = validateInputs(email.value, phone.value, _name.value,password.value, address.value);
         
         if(validityState===true){
             $(email).removeClass('error');
             $(phone).removeClass('error');
             $(_name).removeClass('error');
             $(password).removeClass('error');
-            $(confPassword).removeClass('error');
             $(address).removeClass('error');
             
             document.getElementById('signup-btn').classList.add('button-fade');
@@ -61,7 +59,7 @@
                 "address" : address.value
             });
             console.log(url);
-            request.open('POST', `/addnewWorker?${url}`, true);
+            request.open('POST', `/updateWorker?${url}`, true);
             request.send();
 
             
@@ -69,8 +67,7 @@
                 if (request.readyState === 4 && request.status === 200) {
                     let response = JSON.parse(request.response);
                     if(response.state==="SUCCESS"){
-                        alert("SUCCESS: New Patient added successfully");
-                        
+                        alert("SUCCESS: Update patient's details successfully")
                     } else if(response.state==="PHONE-EXISTS"){
                         $(phone).addClass('error');
                         alert("ERROR: An account with this phone number already exists!");
@@ -80,11 +77,10 @@
                     }
                 }
             }
-        } else if(validityState==="confimpass"){
-            $(password).addClass('error');
-            $(confPassword).addClass('error');
         } else if(validityState==="phone"){
             $(phone).addClass('error');
+        } else if(validityState==="email"){
+            $(email).addClass('error');
         } else if(validityState==="empty"){
             $(phone).addClass('error');
             $(_name).addClass('error');
@@ -108,15 +104,5 @@
     _name.onchange = function () {
         if(_name.value!=="") $(_name).removeClass('error');
         else $(_name).addClass('error');
-    }
-
-    confPassword.onchange = function () {
-        if(confPassword.value===password.value || confPassword.value==="") {
-            $(password).removeClass('error');
-            $(confPassword).removeClass('error');
-        } else {
-            $(password).addClass('error');
-            $(confPassword).addClass('error');
-        }
     }
 </script>

@@ -1,0 +1,77 @@
+<script src="js/delete.js"></script>
+<link rel="stylesheet" type="text/css" href="./css/Delete.css" />
+
+<!--=================== HEADER AND SIDEBAR NAV MENU ===================-->
+<header>
+    <a href="/home">LATTICE</a>
+</header>
+
+<!--=================== DELETE  ===================-->
+<div class="cover">
+    <div class="login-container">
+        <div class="email-msg" id="email-msg-box"></div>
+        <div>
+            <p class="form-title">DELETE PATIENT DETAIL</p>
+            <input id="email" type="text" class="textbox" placeholder="Email" require autocomplete="email" spellcheck="false">
+            <input id="password" type="password" class="textbox password" placeholder="Password" required autocomplete="new-password"/>
+
+            <button id="signup-btn" class="button">Delete</button>
+            <div class="loading loading-none" id="loading-bar">
+                <div class="loading-bar"></div>
+                <div class="loading-bar"></div>
+                <div class="loading-bar"></div>
+                <div class="loading-bar"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var email = document.getElementById('email');
+    var password = document.getElementById("password");
+    
+    document.getElementById("signup-btn").onclick = function () {
+        validityState = validateInputs(email.value, password.value);
+        
+        if(validityState===true){
+            $(email).removeClass('error');
+            $(password).removeClass('error');
+            
+            document.getElementById('signup-btn').classList.add('button-fade');
+            document.getElementById('loading-bar').classList.remove('loading-none');
+
+            const request = new XMLHttpRequest();
+            let url = generateSignupQueryURL({
+                "email": email.value,
+                "password" : password.value
+            });
+            //console.log(url);
+            request.open('POST', `/deleteWorker?${url}`, true);
+            request.send();
+
+            
+            request.onreadystatechange = event => {
+                if (request.readyState === 4 && request.status === 200) {
+                    let response = JSON.parse(request.response);
+                    if(response.state==="SUCCESS"){
+                        alert("SUCCESS: Deleted successfully");
+                        
+                    } else if(response.state==="NO-USER"){
+                        $(email).addClass('error');
+                        alert("ERROR: No Patient with this email");
+                    }   else if (response.state==="WRG-PASS"){
+                        $(password).addClass("error");
+                        alert("ERROR:  Wrong Password");
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    email.onchange = function() {
+        var email_regx = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        if(email.value!=="" && email_regx.test(email.value)) $(email).removeClass('error');
+        else $(email).addClass('error');
+    }
+</script>

@@ -89,16 +89,50 @@ app.post('/addnewWorker', (req,res) => {
 });
 
 
+app.post('/updateWorker', (req,res) => {
+    let params = getParameters(req);
+
+    UpdateWorker.UpdateDetails({
+        "name": params.name,
+        "email": params.email,
+        "phone": params.phone,
+        "address" : params.address,
+        "password" : params.password
+    }).then((_res) => {
+        console.log(_res);
+
+        if(_res.success){
+            res.status(200).json({"state": "SUCCESS"});
+        }
+        else {
+            res.status(200).json({"state": _res.error});
+        }
+    });
+});
+
+app.post('/deleteWorker', (req,res) => {
+    let params = getParameters(req);
+
+    UpdateWorker.UpdateDetails({
+        "email": params.email,
+        "password" : params.password
+    }).then((_res) => {
+        console.log(_res);
+
+        if(_res.success){
+            res.status(200).json({"state": "SUCCESS"});
+        }
+        else {
+            res.status(200).json({"state": _res.error});
+        }
+    });
+});
 
 
 
 
 
-
-
-
-
-
+//===============================================================================================================//
 function getParameters(request){
     url = request.url.split('?');
     var query = {
